@@ -1,8 +1,10 @@
 import xlsxwriter.worksheet
 from PIL import Image
 import xlsxwriter
+import os
 
 SQ_SIZE = 4
+SCALE_FOR_XLSX = 4
 LINE_SIZE = 0
 FILENAME = 'nyan_cat-1.png'
 
@@ -47,12 +49,15 @@ with xlsxwriter.Workbook('output.xlsx') as workbook:
     # Set row & column size
     for x in range(WT):
         for y in range(HT):
-            worksheet.set_row(row=y, height=SQ_SIZE)
-            worksheet.set_column(first_col=0, last_col=WT, width=SQ_SIZE//4)
+            worksheet.set_row_pixels(row=y, height=SQ_SIZE * SCALE_FOR_XLSX)
+            worksheet.set_column_pixels(first_col=0, last_col=WT, width=SQ_SIZE * SCALE_FOR_XLSX)
     # Main loop
     for x in range(WT):
         for y in range(HT):
-            print(x, y)
-            print(x * SQ_SIZE, y * SQ_SIZE)
+            # print(x, y)
+            # print(x * SQ_SIZE, y * SQ_SIZE)
             r, g, b = get_avrg_col(img, (x + 1) * LINE_SIZE + x * SQ_SIZE, (y + 1) * LINE_SIZE + y * SQ_SIZE, SQ_SIZE, SQ_SIZE)
             set_cell_color(worksheet, workbook, x, y, r, g, b)
+
+# optional and only for my machine...
+os.system('"C:\Program Files\LibreOffice\program\soffice.exe" .\output.xlsx')
